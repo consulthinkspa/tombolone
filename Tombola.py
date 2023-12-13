@@ -5,7 +5,7 @@ from tkinter import PhotoImage
 
 # To build the .exe
 # python -m pip install pyinstaller
-# python -m PyInstaller --clean --onefile --icon icona.ico .\Tombola.py
+# python -m PyInstaller --clean --onefile .\tombola.py
 
 class Tabellone:
     def __init__(self, master):
