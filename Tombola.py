@@ -9,14 +9,16 @@ from tkinter import PhotoImage
 
 class Tabellone:
     def __init__(self, master):
-
-        self.coloreEstratto = "#c0158a" # Colorazione del numero estratto sul tabellone 
-        self.coloreBase = "#32327b" # Colorazione base del numero (non estratto) sul tabellone
-        #self.coloreFont = "#f5f5dc" # Colorazione fon numero
+        # Colorazione del numero estratto sul tabellone 
+        self.coloreEstratto = "#c0158a"
+        # Colorazione del numero estratto sul tabellone 
+        self.coloreBase = "#32327b"
+         # Colorazione fon numero
+        #self.coloreFont = "#f5f5dc"
         self.icona = PhotoImage(file = "icona_consulthink.png")
         self.logo = PhotoImage(file = "logo_consulthink.png")
 
-        # Finestra Tabellone
+        # Finestra tabellone
         self.master = master
         self.master.title('Tabellone Tombola Consulthink')
         self.master.iconphoto(False, self.icona)
@@ -27,23 +29,23 @@ class Tabellone:
         window_height = self.master.winfo_screenheight()
         self.master.geometry ("%dx%d"%(window_width,window_height)) # Dimensione automatica della finestra alle dimensioni dello schermo
 
-        self.button = [] # Inizializzazione della griglia di numeri/buttons
-        num = 0 # Contatore che poi sarà utilizzato come indice della lista button
-        for i in range(0, 9): # rows
-            for j in range(0, 10): # columns
+        # Griglia numeri
+        self.button = [] 
+        num = 0 
+        for i in range(0, 9):
+            for j in range(0, 10): 
                 num = num + 1
-                #bg = '#0052cc', fg='#f5f5dc'
                 self.button.append(tk.Button(self.master, text=str(num), bg='#241c23', fg='#f5f5dc', font=("Courier New", 60, "bold"), command = lambda c = num-1: self.man_changeColor(c)))
-                self.button[-1].grid(row=i, column=j, sticky="EWNS") # -1 is the last element in the list
+                self.button[-1].grid(row=i, column=j, sticky="EWNS")
                 tk.Grid.rowconfigure(self.master, i, weight = 1)
                 tk.Grid.columnconfigure(self.master, j, weight = 1)
         
-        # __Finestra utilities__
+        # Finestra utilities
         self.utilities = tk.Toplevel(self.master)
         self.utilities.geometry('800x400')
         self.utilities.title("Uilities Tombola Consulthink")
         self.utilities.iconphoto(False, self.icona)
-        self.utilities.protocol("WM_DELETE_WINDOW", self.disable_event) # Disabilita il pulsante X della finestra
+        self.utilities.protocol("WM_DELETE_WINDOW", self.disable_event)
         self.frame = tk.Frame(self.utilities)
 
         self.consulthink_btn = tk.Button(self.frame, text="", image=self.logo, compound=LEFT, bg = '#f5f5dc', fg='#241c23')
@@ -52,15 +54,15 @@ class Tabellone:
         self.New_btn = tk.Button(self.frame, text="Pulisci Tabellone", font=("Courier New", 34, "bold"), bg = '#f5f5dc', fg='#241c23', command = lambda : self.confirm() )
         self.New_btn.grid(sticky = tk.NW)
 
+        # To Do: estrazione automatica con generazione cartelle tombola
         #self.Estrai_btn = tk.Button(self.frame, text="Estrai Numero", font=("", 30), bg = '#9fc5e8',command = lambda : self.EstraiFair())
         #self.Estrai_btn.grid(pady = 20)
 
         self.status_label = tk.Label(self.frame, text="", font=("Courier New", 20, "bold"))
         self.status_label.grid(sticky = tk.SW)
 
-        self.frame.pack() # Tappo della finestra dell'utilities
-
-        self.nuovaGiocataFair() # Prepara la prima giocata
+        self.frame.pack()
+        self.nuovaGiocataFair()
 
     def confirm(self):
         self.New_btn["state"] = "disabled"
@@ -74,48 +76,50 @@ class Tabellone:
         else:
             self.New_btn["state"] = "normal"
 
-    def disable_event(self): # Disabilita il pulsante X della finestra -mostra una finestra di warning.
+    # Disabilita il pulsante X della finestra -mostra una finestra di warning.
+    def disable_event(self): 
         messagebox.showwarning('Warning', 'Per terminare il programma chiudere la finestra del Tabellone.')
         pass
 
+    # Set numeri estratti
     def nuovaGiocataFair(self):
         print('Nuova estrazione.')
-        self.estratti = set() #Inizializza il set di deposito numeri estratti
+        self.estratti = set() 
         
         for btn_number in range(len(self.button)):
-            self.button[btn_number]["bg"] = self.coloreBase # Ricolora tutti i buttons al colore base
+            self.button[btn_number]["bg"] = self.coloreBase 
 
-        self.status_label.config(text = "") # Reimposta il visualizzatore numeri nell'utilities
+        self.status_label.config(text = "") 
 
     def EstraiFair(self):
-        attuali = len(self.estratti) # Conta il totale dei numeri estratti fin'ora
+        attuali = len(self.estratti)
         
-        if attuali == 90: # Esce se è stato completato il tabellone
+        if attuali == 90:
             self.status_label.config(text = "Fine")
             print("Fine")
             return
 
-        numero = random.randrange(90) # Estrae un numero casuale intero tra 0 e 89 inclusi
-        self.estratti.add(numero) # Aggiunge il numero estratto al Set
+        numero = random.randrange(90)
+        self.estratti.add(numero)
 
-        if len(self.estratti) == attuali: # Se il numero era già stato estratto prima, si ripete l'estrazione.
-            self.EstraiFair() # Chiamata ricorsiva
-        else: # Altrimenti, se il numero è nuovo, lo si mostra sul tabellone.
-            print(numero + 1) # +1 perchè il "numero" rappresenta l'indice
-            self.changeColor(numero) # Colora il numero estratto sul tabellone  
-            self.status_label.config(text = str(numero + 1)) # Stampa il numero estratto sulla finestra dell'utilities
+        if len(self.estratti) == attuali: 
+            self.EstraiFair() 
+        else: 
+            print(numero + 1) 
+            self.changeColor(numero)  
+            self.status_label.config(text = str(numero + 1))
    
-    def changeColor(self, btn_number): # Toggle del colore sul tabellone da utilities
-        if self.button[btn_number].cget('bg') == self.coloreBase: # Se il colore attuale è uguale al colore base imposta il coloreEstratto
+    def changeColor(self, btn_number):
+        if self.button[btn_number].cget('bg') == self.coloreBase: 
             self.button[btn_number]["bg"] = self.coloreEstratto
-        else: # Altrimenti imposta il coloreBase
+        else: 
             self.button[btn_number]["bg"] = self.coloreBase
     
-    def man_changeColor(self, btn_number): # Toggle del colore sul tabellone manuale
-        if self.button[btn_number].cget('bg') == self.coloreBase: # Se il colore attuale è uguale al colore base imposta il coloreEstratto
+    def man_changeColor(self, btn_number): 
+        if self.button[btn_number].cget('bg') == self.coloreBase: 
             self.button[btn_number]["bg"] = self.coloreEstratto
             self.estratti.add(btn_number)
-        else: # Altrimenti imposta il coloreBase
+        else: 
             self.button[btn_number]["bg"] = self.coloreBase
             self.estratti.remove(btn_number)
 
