@@ -1,3 +1,4 @@
+import os
 import random
 import tkinter as tk
 from tkinter import LEFT, messagebox
@@ -5,18 +6,25 @@ from tkinter import PhotoImage
 
 # To build the .exe
 # python -m pip install pyinstaller
-# python -m PyInstaller --clean --onefile .\tombola.py
+# python -m PyInstaller --clean --onefile --windowed --add-data "icona_consulthink.png:." --add-data "logo_consulthink.png:." .\tombola.py
 
 class Tabellone:
     def __init__(self, master):
+        def resource_path(relative_path):
+            try:
+                base_path = sys._MEIPASS
+            except Exception:
+                base_path = os.path.abspath(".")
+            return os.path.join(base_path, relative_path)
+        
         # Colorazione del numero estratto sul tabellone 
         self.coloreEstratto = "#c0158a"
         # Colorazione del numero estratto sul tabellone 
         self.coloreBase = "#32327b"
          # Colorazione fon numero
         #self.coloreFont = "#f5f5dc"
-        self.icona = PhotoImage(file = "icona_consulthink.png")
-        self.logo = PhotoImage(file = "logo_consulthink.png")
+        self.icona = PhotoImage(file = resource_path("icona_consulthink.png"))
+        self.logo = PhotoImage(file = resource_path("logo_consulthink.png"))
 
         # Finestra tabellone
         self.master = master
